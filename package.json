@@ -1,0 +1,19 @@
+{
+  "name": "campusconnect-fullstack",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CampusConnect student placement platform",
+  "workspaces": [
+    "Backend",
+    "Frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently -k -n BACKEND,FRONTEND \"npm run start --workspace=campusconnect-backend\" \"npm run dev --workspace=campusconnect-frontend -- --open\"",
+    "build": "npm run build --workspace=campusconnect-frontend",
+    "backend": "npm run start --workspace=campusconnect-backend",
+    "frontend": "npm run dev --workspace=campusconnect-frontend -- --open"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.6"
+  }
+}
