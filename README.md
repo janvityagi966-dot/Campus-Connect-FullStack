@@ -1,123 +1,310 @@
-# CampusConnect — Full-Stack Student Placement Platform
+# 🎓 CampusConnect — Full-Stack Student Placement Platform
 
-CampusConnect is a student placement web app for exploring job opportunities and tracking applications. It uses React on the frontend and Node.js/Express REST APIs on the backend. It supports MongoDB Atlas and also has a **persistent local file store** when MongoDB is not configured, so registering a user or applying for a job will not be erased just because the backend restarts.
+CampusConnect is a full-stack web application designed to help students explore job opportunities, apply for jobs, and track their application progress through a simple and user-friendly interface.
 
-## Features
+The project uses React for the frontend, Node.js and Express.js for the backend, and supports MongoDB or persistent JSON-file storage for saving application data.
 
-- Student registration and login (passwords are stored as bcrypt hashes)
-- JWT-based protected application endpoints
-- Login session saved in browser local storage
-- Student dashboard with application statistics
-- Job listings and search
-- Apply to a job and prevent duplicate applications
-- Persistent application tracking per signed-in student
-- MongoDB support when a valid `MONGO_URI` is configured
-- Persistent local storage fallback at `Backend/data/campusconnect.json`
-- Responsive UI for desktop and mobile
+## ✨ Features
 
-## Requirements
+- 🔐 **User Authentication** — Student registration and login.
+- 🔒 **Password Security** — Passwords are hashed using bcryptjs.
+- 💼 **Job Listings** — Browse available job and internship opportunities.
+- 🔎 **Job Search** — Search opportunities by job title, company, location, and skills.
+- 📝 **Job Applications** — Apply for jobs after logging in.
+- 📊 **Student Dashboard** — View application statistics and recent activity.
+- 📋 **Application Tracking** — View submitted applications and their statuses.
+- 🛡️ **Protected Routes** — Restrict access to authenticated student pages.
+- 💾 **Persistent Storage** — Store data using MongoDB or a local JSON file.
+- 📱 **Responsive UI** — A clean interface built with custom CSS.
 
-- Node.js 20+ (Node 24 is fine)
-- npm
-- VS Code
-- Optional: MongoDB Atlas account for hosted database storage
+## 🛠️ Technologies Used
 
-## Open the project
+### Frontend
+- **HTML5** — Base HTML document structure.
+- **CSS3** — Styling, layouts, animations, and responsive design.
+- **JavaScript (ES6+)** — Application logic and API communication.
+- **React 18** — Component-based user interface.
+- **React Router DOM** — Client-side navigation.
+- **Vite** — Frontend development server and build tool.
 
-1. Download and extract the ZIP.
-2. In VS Code, choose **File → Open Folder** and select the top-level `CampusConnect-FullStack` folder.
-3. Open a terminal in that root folder.
+### Backend
+- **Node.js** — JavaScript runtime for the server.
+- **Express.js** — Backend framework and REST API development.
+- **Mongoose** — MongoDB schemas, models, and database operations.
+- **bcryptjs** — Secure password hashing.
+- **jsonwebtoken (JWT)** — Token-based authentication.
+- **CORS** — Cross-origin request handling.
+- **dotenv** — Environment variable configuration.
 
-The root `package.json` uses npm workspaces, so install dependencies once from the project root:
+### Data Storage
+- **MongoDB** — Database option for storing users, jobs, and applications.
+- **JSON File Storage** — Persistent local storage fallback for development.
+
+## 🏗️ Project Architecture
+
+The application follows a frontend-backend architecture.
+
+```text
+             Student / User
+                   |
+                   v
+          React Frontend (Vite)
+                   |
+                   v
+             REST API Calls
+                   |
+                   v
+           Node.js + Express
+                   |
+                   v
+          Authentication & Routes
+                   |
+                   v
+         -------------------------
+         |                       |
+         v                       v
+    MongoDB + Mongoose      JSON File Storage
+```
+
+The frontend communicates with the backend through HTTP requests. The backend processes requests, validates data, checks authentication where required, and reads or writes data using the configured storage option.
+
+## 📂 Project Structure
+
+```text
+CampusConnect-FullStack/
+│
+├── Frontend/
+│   ├── index.html
+│   ├── package.json
+│   └── src/
+│       ├── main.jsx
+│       ├── App.jsx
+│       ├── index.css
+│       ├── api.js
+│       │
+│       ├── context/
+│       │   └── AuthContext.jsx
+│       │
+│       ├── components/
+│       │   ├── Navbar.jsx
+│       │   └── ProtectedRoute.jsx
+│       │
+│       └── pages/
+│           ├── Home.jsx
+│           ├── Login.jsx
+│           ├── Register.jsx
+│           ├── Jobs.jsx
+│           ├── Dashboard.jsx
+│           └── Applications.jsx
+│
+├── Backend/
+│   ├── server.js
+│   ├── localStore.js
+│   ├── package.json
+│   ├── .env.example
+│   │
+│   ├── routes/
+│   │   ├── auth.js
+│   │   ├── job.js
+│   │   └── Application.js
+│   │
+│   ├── middleware/
+│   │   └── requireAuth.js
+│   │
+│   ├── models/
+│   │   ├── User.js
+│   │   ├── Jobs.js
+│   │   └── Application.js
+│   │
+│   └── data/
+│       └── .gitkeep
+│
+├── package.json
+├── package-lock.json
+├── .gitignore
+└── README.md
+```
+
+## ⚙️ Installation and Setup
+
+### Prerequisites
+
+Make sure you have installed:
+
+- [Node.js](https://nodejs.org/) — Version 20 or later, as specified in the project documentation.
+- npm — Included with Node.js.
+- MongoDB Atlas account, if you want to use MongoDB storage.
+
+### Step 1: Clone the Repository
+
+```bash
+git clone <YOUR_GITHUB_REPOSITORY_URL>
+```
+
+Navigate to the project directory:
+
+```bash
+cd CampusConnect-FullStack
+```
+
+Replace `<YOUR_GITHUB_REPOSITORY_URL>` with your actual GitHub repository URL.
+
+### Step 2: Install Dependencies
+
+Run the following command from the project root:
 
 ```bash
 npm install
 ```
 
-## Run the whole website with one command
+### Step 3: Configure Environment Variables
 
-From the project root:
+To configure the backend, create a `.env` file inside the `Backend` directory.
+
+You can copy the example configuration:
+
+```bash
+cp Backend/.env.example Backend/.env
+```
+
+On Windows, you can also create the file manually.
+
+Configure the following variables:
+
+```env
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_long_random_secret
+```
+
+**Important:** Replace the example values with your own configuration. Never commit real database credentials or JWT secrets to GitHub.
+
+If MongoDB is not configured or the connection fails, the application can use its local JSON-file storage fallback.
+
+### Step 4: Start the Application
+
+From the project root, run:
 
 ```bash
 npm run dev
 ```
 
-This starts both backend and frontend; Vite should open the website automatically. The frontend usually runs at `http://localhost:5173` and the backend at `http://localhost:5000`.
+This command starts the frontend and backend development processes together.
 
-To stop both servers, focus the terminal and press `Ctrl + C`.
+Typical local addresses:
 
-## Data persistence modes
+- Frontend: `http://localhost:5173`
+- Backend API: `http://localhost:5000`
 
-### Option A — Local persistent storage (works immediately)
+The actual ports may differ if your environment is configured differently.
 
-If `MONGO_URI` is not configured, accounts, jobs, and applications are stored in:
+### Step 5: Open the Application
 
-```text
-Backend/data/campusconnect.json
+Open the frontend URL in your browser.
+
+You can then:
+
+1. Register a new student account.
+2. Log in with your credentials.
+3. Browse and search job listings.
+4. Apply for an opportunity.
+5. Open your dashboard.
+6. View your submitted applications.
+
+## 🔌 API Endpoints
+
+The backend provides the following REST API endpoints.
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/` | Check backend status |
+| POST | `/api/auth/register` | Register a student |
+| POST | `/api/auth/login` | Log in a student |
+| GET | `/api/jobs` | Retrieve job listings |
+| GET | `/api/jobs/:id` | Retrieve a specific job |
+| POST | `/api/jobs` | Create a job listing |
+| POST | `/api/applications` | Submit a job application |
+| GET | `/api/applications/mine` | Retrieve the logged-in student's applications |
+
+**Authentication:** The application submission and personal application-list endpoints require a valid JWT bearer token.
+
+Example authorization header:
+
+```http
+Authorization: Bearer <your_jwt_token>
 ```
 
-This data persists through normal backend restarts. Passwords are saved as bcrypt hashes, not plain text. The JSON data file is excluded from Git by `.gitignore`; do not commit it. Back up this file if you need to keep local test data when moving folders or computers.
+Note: The current job-creation endpoint does not enforce an admin role, so it should not be treated as a production-ready administrative endpoint.
 
-### Option B — MongoDB Atlas
+## 🔐 Authentication and Security
 
-1. Copy `Backend/.env.example` to `Backend/.env`.
-2. Put your Atlas connection string in `MONGO_URI` and set a private value for `JWT_SECRET`.
-3. Ensure your Atlas database user and network access are configured.
-4. Restart `npm run dev`.
+CampusConnect implements basic authentication using the following process:
 
-Example format (replace the placeholders using your own Atlas values):
+1. A student registers with their details.
+2. The backend hashes the password using bcryptjs.
+3. During login, the backend compares the entered password with the stored hash.
+4. A successful login returns a signed JWT.
+5. The frontend stores the token in browser local storage.
+6. API requests include the token in the Authorization header.
+7. Protected backend routes verify the token before processing the request.
 
-```env
-MONGO_URI=mongodb+srv://USERNAME:PASSWORD@YOUR_CLUSTER.mongodb.net/CampusConnect
-JWT_SECRET=use_a_long_random_secret_here
-PORT=5000
-```
+The frontend also uses protected routes to guide unauthenticated users to the login page.
 
-Do not send database credentials in chat or commit `.env` to GitHub. If you already created local demo accounts before configuring MongoDB, the backend migrates local users, sample jobs, and applications into MongoDB on a successful startup. Log in again after switching storage modes so the browser receives a token for the active database.
+For production deployment, additional security measures such as strict CORS configuration, rate limiting, stronger validation, secure token handling, and proper authorization should be implemented.
 
-## Main API endpoints
+## 🗄️ Data Storage
 
-| Method | Endpoint | Purpose | Authentication |
-|---|---|---|---|
-| `GET` | `/` | API health and storage mode | No |
-| `POST` | `/api/auth/register` | Create a student account | No |
-| `POST` | `/api/auth/login` | Log in and receive a JWT | No |
-| `GET` | `/api/jobs` | List opportunities | No |
-| `GET` | `/api/jobs/:id` | Get a job | No |
-| `POST` | `/api/jobs` | Create a job listing | MongoDB required in this demo setup |
-| `POST` | `/api/applications` | Apply for a job | Yes |
-| `GET` | `/api/applications/mine` | List the current student's applications | Yes |
+CampusConnect supports two storage options:
 
-## Folder structure
+**1. MongoDB with Mongoose**
 
-```text
-CampusConnect-FullStack/
-├── Backend/
-│   ├── data/                 # Local JSON database created when run
-│   ├── middleware/
-│   ├── models/
-│   ├── routes/
-│   ├── localStore.js
-│   ├── server.js
-│   ├── package.json
-│   └── .env.example
-├── Frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── context/
-│   │   ├── pages/
-│   │   ├── api.js
-│   │   ├── App.jsx
-│   │   └── index.css
-│   ├── index.html
-│   └── package.json
-├── package.json
-└── README.md
-```
+When MongoDB is configured and connected successfully, the backend uses Mongoose models to manage user accounts, jobs, and applications.
 
-## Notes
+**2. Persistent JSON-file storage**
 
-- For the first run after installing this update, register your account once more if your previous account was only held in temporary in-memory mode; that old in-memory record cannot be recovered after the old server process stopped. After this update, local registrations are saved to disk.
-- If you log out, use **Log in** with the same email and password; do not register another account each time.
-- Sample job listings are demo content, not verified job offers.
-- This is a learning project, not production-ready. Before real-world deployment, add stronger rate limiting, deployment secrets, tests, and admin/role authorization.
+When MongoDB is not configured or the connection is unavailable, the backend can use a local JSON file for development and demonstration purposes.
+
+The local storage implementation is located in `Backend/localStore.js`, and its runtime data file is created under `Backend/data/`.
+
+The application also includes logic to migrate local data into MongoDB when a database connection becomes available.
+
+## 🧠 Key Concepts Demonstrated
+
+This project demonstrates practical knowledge of:
+
+- Component-based frontend development using React.
+- React Hooks and Context API.
+- Client-side routing.
+- Form handling and validation.
+- Asynchronous JavaScript and Fetch API.
+- REST API development with Express.js.
+- JWT-based authentication and middleware.
+- Password hashing using bcryptjs.
+- MongoDB schemas and relationships using Mongoose.
+- Persistent file-based storage.
+- Frontend-backend integration.
+- Error handling and loading states.
+- Responsive design using CSS.
+
+## 🚀 Future Improvements
+
+Possible enhancements include:
+
+- Employer and administrator roles.
+- Secure job creation and management.
+- Resume uploads and student profile editing.
+- Server-side job search, filtering, and pagination.
+- Email notifications for application updates.
+- Automated frontend and backend tests.
+- Improved production security and deployment.
+- Integration with verified, real-world job listings.
+
+## 👩‍💻 Project Purpose
+
+CampusConnect was developed as a full-stack web development project to demonstrate how a modern frontend can communicate with a backend API, authenticate users, and persist application data.
+
+It brings job discovery, job applications, and application tracking together in one platform designed for students.
+
+---
+
+**Built with React, JavaScript, Node.js, Express.js, and MongoDB support.**
